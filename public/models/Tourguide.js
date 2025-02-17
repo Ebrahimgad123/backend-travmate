@@ -2,12 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const CarSchema = new mongoose_1.Schema({
+    _id: { type: mongoose_1.Schema.Types.ObjectId, default: () => new mongoose_1.Types.ObjectId() },
     model: { type: String, required: true },
     yearMade: { type: Number, required: true },
     passengerNumber: { type: Number, required: true },
-});
+}, { _id: true });
 const reviewSchema = new mongoose_1.Schema({
-    _id: { type: mongoose_1.Schema.Types.ObjectId, default: () => new mongoose_1.Types.ObjectId() }, // التعديل هنا باستخدام Types.ObjectId
+    _id: { type: mongoose_1.Schema.Types.ObjectId, default: () => new mongoose_1.Types.ObjectId() },
     name: { type: String, required: true },
     image: { type: String, required: true },
     comment: { type: String, required: true },

@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
 const Tourguide_1 = __importDefault(require("../models/Tourguide"));
-const router = express_1.default.Router();
+const express_1 = require("express");
+const router = (0, express_1.Router)();
 //filter guides by price, rating, guideType, language
 router.get('/guides/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -122,6 +122,61 @@ router.get('/guides/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         });
     }
 }));
+// Update a single guide by id
+router.put('/guides/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const guideId = req.params.id;
+        const updatedGuide = yield Tourguide_1.default.findByIdAndUpdate(guideId, req.body, { new: true });
+        if (updatedGuide) {
+            res.status(200).json({
+                success: true,
+                data: updatedGuide,
+            });
+        }
+        else {
+            res.status(404).json({
+                success: false,
+                message: 'Guide not found',
+            });
+        }
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred while updating the guide',
+            error: errorMessage,
+        });
+    }
+}));
+// Delete a single guide by id
+router.delete('/guides/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const guideId = req.params.id;
+        const deletedGuide = yield Tourguide_1.default.findByIdAndDelete(guideId);
+        if (deletedGuide) {
+            res.status(200).json({
+                success: true,
+                message: 'Guide deleted successfully',
+                data: deletedGuide,
+            });
+        }
+        else {
+            res.status(404).json({
+                success: false,
+                message: 'Guide not found',
+            });
+        }
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred while deleting the guide',
+            error: errorMessage,
+        });
+    }
+}));
 //add new review To TourGuide 
 router.post('/guides/:id/addReview', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -196,6 +251,7 @@ router.delete('/guides/:guideId/review/:reviewId', (req, res) => __awaiter(void 
         });
     }
 }));
+// delete car from tour guide
 router.delete('/guides/:tourGuideId/car/:carId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -216,7 +272,7 @@ router.delete('/guides/:tourGuideId/car/:carId', (req, res) => __awaiter(void 0,
             });
             return;
         }
-        const updatedGuide = yield Tourguide_1.default.findByIdAndUpdate(tourGuideId, { $unset: { car: 1 } }, { new: true });
+        const updatedGuide = yield Tourguide_1.default.findByIdAndUpdate(tourGuideId, { car: null }, { new: true });
         if (updatedGuide) {
             res.status(200).json({
                 success: true,
@@ -236,6 +292,69 @@ router.delete('/guides/:tourGuideId/car/:carId', (req, res) => __awaiter(void 0,
         res.status(500).json({
             success: false,
             message: 'An error occurred while deleting the car',
+            error: errorMessage,
+        });
+    }
+}));
+//add car to tour guide
+router.put('/guides/:tourGuideId/car', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { tourGuideId } = req.params;
+        const { model, carImage, yearMade, passengerNumber } = req.body;
+        const guide = yield Tourguide_1.default.findByIdAndUpdate(tourGuideId, {
+            car: { model, carImage, yearMade, passengerNumber },
+        }, { new: true });
+        if (guide) {
+            res.status(200).json({
+                success: true,
+                message: 'Car added successfully',
+                data: guide,
+            });
+        }
+        else {
+            res.status(404).json({
+                success: false,
+                message: 'Guide not found',
+            });
+            return;
+        }
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred while adding the car',
+            error: errorMessage,
+        });
+    }
+}));
+//add new tourguide
+router.post('/addguides', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { name, price, rating, guideType, languages, image, description, availabilityDates, cities, isAvailable } = req.body;
+        const newGuide = yield new Tourguide_1.default({
+            name,
+            price,
+            rating,
+            guideType,
+            languages,
+            image,
+            description,
+            availabilityDates,
+            cities,
+            isAvailable,
+        }).save();
+        res.status(201).json({
+            success: true,
+            message: 'Guide added successfully',
+            data: newGuide,
+        });
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred while adding the guide',
             error: errorMessage,
         });
     }
