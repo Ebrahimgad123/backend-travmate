@@ -16,7 +16,6 @@ router.get('/users', async (req, res, next) => {
         next(error);
     }
 });
-
 // Get user by ID
 router.get('/users/:id', async (req, res, next) => {
     try {

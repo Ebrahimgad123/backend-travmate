@@ -5,8 +5,8 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const isValidUserName = (userName: string): boolean => userName.length >= 3 && /^[a-zA-Z0-9]+$/.test(userName);
+// const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+// const isValidUserName = (userName: string): boolean => userName.length >= 3 && /^[a-zA-Z0-9]+$/.test(userName);
 const isValidPassword = (password: string): boolean => password.length >= 8 && /\d/.test(password) && /[A-Z]/.test(password);
 
 router.post('/register', async (req: Request, res: Response, next: NextFunction) => {
@@ -20,18 +20,18 @@ router.post('/register', async (req: Request, res: Response, next: NextFunction)
             res.status(403).json({ success: false, message: 'Access denied. Only admin can change role' });
             return;
         }
-        if (!isValidEmail(email)) {
-            res.status(400).json({ success: false, message: 'Invalid email format.' });
-            return;
-        }
+        // if (!isValidEmail(email)) {
+        //     res.status(400).json({ success: false, message: 'Invalid email format.' });
+        //     return;
+        // }
         if (!isValidPassword(password)) {
             res.status(400).json({ success: false, message: 'Weak password. It must be at least 8 characters long, include a number, and an uppercase letter.' });
             return;
         }
-        if (!isValidUserName(userName)) {
-            res.status(400).json({ success: false, message: 'Invalid username. It must be at least 3 characters long and contain only alphanumeric characters.' });
-            return;
-        }
+        // if (!isValidUserName(userName)) {
+        //     res.status(400).json({ success: false, message: 'Invalid username. It must be at least 3 characters long and contain only alphanumeric characters.' });
+        //     return;
+        // }
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -57,7 +57,7 @@ router.post('/register', async (req: Request, res: Response, next: NextFunction)
         next(error); 
     }
 });
-// دالة لإرسال الأخطاء
+
 const sendError = (res: Response, status: number, message: string) => {
     return res.status(status).json({ success: false, message });
 };

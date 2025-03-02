@@ -344,35 +344,26 @@ router.delete('/guides/:guideId/review/:reviewId', async (req: Request, res: Res
     }
   });
   //add new tourguide
-  router.post('/addguides', async (req: Request, res: Response) => {
+  router.post("/guides", async (req, res) => {
     try {
-      const { name, price, rating, guideType, languages, image, description, availabilityDates, cities, isAvailable } = req.body;
-      const newGuide = await new Guide({
-        name,
-        price,
-        rating,
-        guideType,
-        languages,
-        image,
-        description,
-        availabilityDates,
-        cities,
-        isAvailable,
-      }).save();
-      
-      res.status(201).json({
-        success: true,
-        message: 'Guide added successfully',
-        data: newGuide,
-      });
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error? error.message : 'An unknown error occurred';
-      res.status(500).json({
-        success: false,
-        message: 'An error occurred while adding the guide',
-        error: errorMessage,
-      });
+      let guideData = req.body;
+  
+      if (Array.isArray(guideData.availabilityDates)) {
+        guideData.availabilityDates = guideData.availabilityDates.map((date: string) => new Date(date));
+      }
+  
+      const newGuide = new Guide(guideData);
+      const savedGuide = await newGuide.save();
+  
+      res.status(201).json({ success: true, data: savedGuide });
+      return;
+    } catch (error) {
+      console.error("Error adding guide:", error);
+      res.status(500).json({ success: false, message: "Failed to add guide", error });
+      return;
     }
   });
   
+  
+      
 export default router;

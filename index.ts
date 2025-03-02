@@ -7,6 +7,7 @@ import connectToMongoDB from './db';
 import routerGuide from './routes/tourguideRoute';
 import routerAuth from './routes/authRoute';
 import usersRoutes from './routes/usersRoute';
+import placeRoutes from './routes/placesRoute';
 import { errorHandler, errorHandling, notFound } from './middlewares/errorHandling';
 
 dotenv.config(); 
@@ -28,6 +29,7 @@ connectToMongoDB();
 app.use('/', routerGuide);  
 app.use('/', routerAuth);    
 app.use('/', usersRoutes)
+app.use('/', placeRoutes)
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello, TypeScript with Express!');
@@ -35,9 +37,7 @@ app.get('/', (req: Request, res: Response) => {
 
 
 app.use(notFound)
-
 app.use(errorHandler);
-
 app.use(errorHandling)
 
 app.listen(process.env.PORT, () => {
