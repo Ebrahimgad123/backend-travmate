@@ -27,6 +27,7 @@ router.get('/places', async (req: Request, res: Response, next: NextFunction) =>
     try {
         const places = await Place.find().populate({
             path: "reviews.user",
+            select: "_id userName email userPhoto" ,
         })
         .exec();;
         res.json({ success: true, places });
