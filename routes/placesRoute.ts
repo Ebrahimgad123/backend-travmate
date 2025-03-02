@@ -25,7 +25,10 @@ router.post('/places', async (req: Request, res: Response, next: NextFunction) =
 
 router.get('/places', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const places = await Place.find();
+        const places = await Place.find().populate({
+            path: "reviews.user",
+        })
+        .exec();;
         res.json({ success: true, places });
     } catch (error) {
         next(error);
