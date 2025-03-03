@@ -34,6 +34,7 @@ export interface IGuide extends Document {
 const CarSchema: Schema = new Schema({
  _id: { type: Schema.Types.ObjectId, default: () => new Types.ObjectId() },  
   model: { type: String, required: true },
+  carImage: { type: String, required: true },
   yearMade: { type: Number, required: true },
   passengerNumber: { type: Number, required: true },
 }, { _id: true });
