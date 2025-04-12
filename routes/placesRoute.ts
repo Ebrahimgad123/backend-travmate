@@ -1,121 +1,125 @@
-import express, { Request, Response, NextFunction } from 'express';
-import Place from '../models/Place';
+import express, { Request, Response } from 'express';
+import { PlaceModel, IPlace } from '../models/Place';
 
 const router = express.Router();
 
 
-router.post('/places', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/places', async (req: Request, res: Response) => {
     try {
-        const { name, description, location, address, images, category } = req.body;
-
-        if (!name || !description || !location || !address || !category) {
-            res.status(400).json({ success: false, message: 'Please provide all required fields' });
-            return;
-        }
-
-        const newPlace = new Place({ name, description, location, address, images, category });
-
-        await newPlace.save();
-        res.status(201).json({ success: true, message: 'Place added successfully', place: newPlace });
+        const places = await PlaceModel.find({});
+        res.status(200).json({ success: true, data: places });
     } catch (error) {
-        next(error);
+        res.status(500).json({ success: false, message: 'Failed to fetch places', error });
     }
 });
 
 
-router.get('/places', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/places/:id', async (req: Request, res: Response) => {
     try {
-        const places = await Place.find().populate({
-            path: "reviews.user",
-            select: "_id userName email userPhoto" ,
+        const place = await PlaceModel.findById(req.params.id);
+        if (!place) {
+            res.status(404).json({ success: false, message: 'Place not found' });
+            return;
+        }
+        res.status(200).json({ success: true, data: place });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch place', error });
+    }
+});
+
+// Add a new place
+router.post('/places', async (req: Request, res: Response) => {
+    try {
+        const newPlace = new PlaceModel(req.body);
+        const savedPlace = await newPlace.save();
+        res.status(201).json({ success: true, data: savedPlace });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to add place', error });
+    }
+});
+
+// Update a place by ID
+router.put('/places/:id', async (req: Request, res: Response) => {
+    try {
+        const updatedPlace = await PlaceModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedPlace) {
+            res.status(404).json({ success: false, message: 'Place not found' });
+            return;
+        }
+        res.status(200).json({ success: true, data: updatedPlace });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to update place', error });
+    }
+});
+
+// Delete a place by ID
+router.delete('/places/:id', async (req: Request, res: Response) => {
+    try {
+        const deletedPlace = await PlaceModel.findByIdAndDelete(req.params.id);
+        if (!deletedPlace) {
+            res.status(404).json({ success: false, message: 'Place not found' });
+            return;
+        }
+        res.status(200).json({ success: true, message: 'Place deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to delete place', error });
+    }
+});
+
+// Add a review to a place
+router.post('/places/:id/reviews', async (req: Request, res: Response) => {
+    try {
+        const { name, rating, text } = req.body;
+        const place = await PlaceModel.findByIdAndUpdate(
+            req.params.id,
+            { $push: { reviews: { name, rating, text, relativePublishTimeDescription: new Date().toISOString() } } },
+            { new: true }
+        );
+        if (!place) {
+            res.status(404).json({ success: false, message: 'Place not found' });
+            return;
+        }
+        res.status(201).json({ success: true, data: place });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to add review', error });
+    }
+});
+
+// Search nearby places
+router.post('/places/nearby', async (req: Request, res: Response) => {
+    try {
+        const { includedTypes, maxResultCount, locationRestriction } = req.body;
+
+        if (!locationRestriction || !locationRestriction.circle) {
+             res.status(400).json({ success: false, message: 'Invalid location restriction' });
+             return
+        }
+
+        const { center, radius } = locationRestriction.circle;
+
+        if (!center || typeof center.latitude !== 'number' || typeof center.longitude !== 'number' || typeof radius !== 'number') {
+             res.status(400).json({ success: false, message: 'Invalid center or radius' });
+             return
+        }
+
+        const places = await PlaceModel.find({
+            location: {
+                $geoWithin: {
+                    $centerSphere: [[center.longitude, center.latitude], radius / 6378.1], // Convert radius to radians
+                },
+            },
+            ...(includedTypes && includedTypes.length > 0 ? { types: { $in: includedTypes } } : {}),
         })
-        .exec();;
-        res.json({ success: true, places });
-    } catch (error) {
-        next(error);
-    }
-});
+            .limit(maxResultCount || 20);
 
-
-router.get('/places/:id', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const place = await Place.findById(req.params.id);
-
-        if (!place) {
-            res.status(404).json({ success: false, message: 'Place not found' });
-            return;
+        if (places.length === 0) {
+             res.status(404).json({ success: false, message: 'No nearby places found' });
+             return
         }
 
-        res.json({ success: true, place });
+        res.status(200).json({ success: true, data: places });
     } catch (error) {
-        next(error);
-    }
-});
-
-
-router.put('/places/:id', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const place = await Place.findById(req.params.id);
-
-        if (!place) {
-            res.status(404).json({ success: false, message: 'Place not found' });
-            return;
-        }
-        const updatedPlace = await Place.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        res.json({ success: true, message: 'Place updated successfully', place: updatedPlace });
-    } catch (error) {
-        next(error);
-    }
-});
-
-
-router.delete('/places/:id', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const place = await Place.findById(req.params.id);
-
-        if (!place) {
-            res.status(404).json({ success: false, message: 'Place not found' });
-            return;
-        }
-
-        await place.deleteOne();
-        res.json({ success: true, message: 'Place deleted successfully' });
-    } catch (error) {
-        next(error);
-    }
-});
-
-
-router.post('/places/:id/reviews', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { comment, rating } = req.body;
-
-        if (!comment || rating == null || rating < 0 || rating > 5) {
-            res.status(400).json({ success: false, message: 'Invalid review data' });
-            return;
-        }
-
-        const place = await Place.findById(req.params.id);
-
-        if (!place) {
-            res.status(404).json({ success: false, message: 'Place not found' });
-            return;
-        }
-
-        // تأكد أن reviews ليست undefined
-        if (!place.reviews) place.reviews = [];
-
-        // إضافة التقييم
-        place.reviews.push( comment, rating );
-
-        // حساب التقييم العام
-        const totalRatings = place.reviews.reduce((acc, review) => acc + review.rating, 0);
-        place.rating = totalRatings / place.reviews.length;
-
-        await place.save();
-        res.status(201).json({ success: true, message: 'Review added successfully', place });
-    } catch (error) {
-        next(error);
+        res.status(500).json({ success: false, message: 'Failed to search nearby places', error });
     }
 });
 

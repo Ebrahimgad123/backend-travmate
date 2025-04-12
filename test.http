@@ -1,0 +1,16 @@
+POST http://localhost:8000/places/nearby
+Content-Type: application/json
+
+{
+  "includedTypes": ["tourist_attraction"],
+  "maxResultCount": 20,
+  "locationRestriction": {
+    "circle": {
+      "center": {
+        "latitude": 30.0444,
+        "longitude": 31.2357
+      },
+      "radius": 20000
+    }
+  }
+}
