@@ -1,20 +1,201 @@
+
 POST http://localhost:8000/places
 Content-Type: application/json
 
 {
-  "id": "unique-id-123",
+  "id": "unique-id-003",
   "displayName": {
-    "text": "Pyramids of Giza",
+    "text": "Statue of Liberty",
     "languageCode": "en"
   },
   "location": {
     "type": "Point",
-    "coordinates": [31.1342, 29.9792]
+    "coordinates": [-74.0445, 40.6892]
+  },
+  "types": ["tourist_attraction"],
+  "rating": 4.6,
+  "userRatingCount": 8000,
+  "formattedAddress": "New York, USA",
+  "websiteUri": "https://example.com",
+  "priceLevel": "moderate",
+  "photos": [
+    "https://upload.wikimedia.org/wikipedia/commons/a/a1/Statue_of_Liberty_7.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/3/3e/Statue_of_Liberty_NYC.jpg"
+  ]
+}
+###
+POST http://localhost:8000/places
+Content-Type: application/json
+
+{
+  "id": "unique-id-004",
+  "displayName": {
+    "text": "Great Wall of China",
+    "languageCode": "en"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [116.5704, 40.4319]
+  },
+  "types": ["historical_site"],
+  "rating": 4.9,
+  "userRatingCount": 12000,
+  "formattedAddress": "Beijing, China",
+  "websiteUri": "https://example.com",
+  "priceLevel": "moderate",
+  "photos": [
+    "https://upload.wikimedia.org/wikipedia/commons/6/6f/Great_Wall_of_China_Jinshanling.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/1/10/Great_Wall_of_China_at_Jinshanling.jpg"
+  ]
+}
+###
+POST http://localhost:8000/places
+Content-Type: application/json
+
+{
+  "id": "unique-id-005",
+  "displayName": {
+    "text": "Sydney Opera House",
+    "languageCode": "en"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [151.2153, -33.8568]
+  },
+  "types": ["cultural_center"],
+  "rating": 4.7,
+  "userRatingCount": 7000,
+  "formattedAddress": "Sydney, Australia",
+  "websiteUri": "https://example.com",
+  "priceLevel": "expensive",
+  "photos": [
+    "https://upload.wikimedia.org/wikipedia/commons/4/40/Sydney_Opera_House_Sails.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/3/3e/Sydney_Opera_House_and_Harbour_Bridge.jpg"
+  ]
+}
+###
+POST http://localhost:8000/places
+Content-Type: application/json
+
+{
+  "id": "unique-id-006",
+  "displayName": {
+    "text": "Taj Mahal",
+    "languageCode": "en"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [78.0421, 27.1751]
+  },
+  "types": ["historical_site"],
+  "rating": 4.9,
+  "userRatingCount": 15000,
+  "formattedAddress": "Agra, India",
+  "websiteUri": "https://example.com",
+  "priceLevel": "moderate",
+  "photos": [
+    "https://upload.wikimedia.org/wikipedia/commons/d/da/Taj-Mahal.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/1/1e/Taj_Mahal_in_March_2004.jpg"
+  ]
+}
+###
+POST http://localhost:8000/places
+Content-Type: application/json
+
+{
+  "id": "unique-id-007",
+  "displayName": {
+    "text": "Colosseum",
+    "languageCode": "en"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [12.4922, 41.8902]
+  },
+  "types": ["historical_site"],
+  "rating": 4.8,
+  "userRatingCount": 9000,
+  "formattedAddress": "Rome, Italy",
+  "websiteUri": "https://example.com",
+  "priceLevel": "moderate",
+  "photos": [
+    "https://upload.wikimedia.org/wikipedia/commons/d/de/Colosseo_2020.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/5/5a/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg"
+  ]
+}
+###
+POST http://localhost:8000/places
+Content-Type: application/json
+
+{
+  "id": "unique-id-008",
+  "displayName": {
+    "text": "Machu Picchu",
+    "languageCode": "en"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [-72.5451, -13.1631]
+  },
+  "types": ["historical_site"],
+  "rating": 4.9,
+  "userRatingCount": 6000,
+  "formattedAddress": "Cusco Region, Peru",
+  "websiteUri": "https://example.com",
+  "priceLevel": "expensive",
+  "photos": [
+    "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/1/16/Machu_Picchu_-_panoramio.jpg"
+  ]
+}
+###
+POST http://localhost:8000/places
+Content-Type: application/json
+
+{
+  "id": "unique-id-009",
+  "displayName": {
+    "text": "Christ the Redeemer",
+    "languageCode": "en"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [-43.2105, -22.9519]
   },
   "types": ["tourist_attraction"],
   "rating": 4.8,
   "userRatingCount": 5000,
-  "formattedAddress": "Giza, Egypt",
+  "formattedAddress": "Rio de Janeiro, Brazil",
   "websiteUri": "https://example.com",
-  "priceLevel": "moderate"
+  "priceLevel": "moderate",
+  "photos": [
+    "https://upload.wikimedia.org/wikipedia/commons/9/97/Christ_the_Redeemer_-_Rio.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/8/8e/Christ_the_Redeemer_statue.jpg"
+  ]
 }
+###
+POST http://localhost:8000/places
+Content-Type: application/json
+
+{
+  "id": "unique-id-010",
+  "displayName": {
+    "text": "Burj Khalifa",
+    "languageCode": "en"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [55.2744, 25.1972]
+  },
+  "types": ["skyscraper"],
+  "rating": 4.9,
+  "userRatingCount": 10000,
+  "formattedAddress": "Dubai, UAE",
+  "websiteUri": "https://example.com",
+  "priceLevel": "expensive",
+  "photos": [
+    "https://upload.wikimedia.org/wikipedia/commons/9/93/Burj_Khalifa.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/3/3e/Burj_Khalifa_Night_View.jpg"
+  ]
+}
+
