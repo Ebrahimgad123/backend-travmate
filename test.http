@@ -1,16 +1,20 @@
-POST http://localhost:8000/places/nearby
+POST http://localhost:8000/places
 Content-Type: application/json
 
 {
-  "includedTypes": ["tourist_attraction"],
-  "maxResultCount": 20,
-  "locationRestriction": {
-    "circle": {
-      "center": {
-        "latitude": 30.0444,
-        "longitude": 31.2357
-      },
-      "radius": 20000
-    }
-  }
+  "id": "unique-id-123",
+  "displayName": {
+    "text": "Pyramids of Giza",
+    "languageCode": "en"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [31.1342, 29.9792]
+  },
+  "types": ["tourist_attraction"],
+  "rating": 4.8,
+  "userRatingCount": 5000,
+  "formattedAddress": "Giza, Egypt",
+  "websiteUri": "https://example.com",
+  "priceLevel": "moderate"
 }

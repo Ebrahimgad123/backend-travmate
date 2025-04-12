@@ -124,3 +124,22 @@ router.post('/places/nearby', async (req: Request, res: Response) => {
 });
 
 export default router;
+
+// Example place data
+const examplePlace = {
+    id: "unique-id-123",
+    displayName: {
+        text: "Pyramids of Giza",
+        languageCode: "en"
+    },
+    location: {
+        type: "Point",
+        coordinates: [31.1342, 29.9792] // [longitude, latitude]
+    },
+    types: ["tourist_attraction"],
+    rating: 4.8,
+    userRatingCount: 5000,
+    formattedAddress: "Giza, Egypt",
+    websiteUri: "https://example.com",
+    priceLevel: "moderate"
+};

@@ -1,7 +1,7 @@
-import mongoose, { Document, Schema, model } from "mongoose";
+import mongoose, { Document, Schema, model,Types } from "mongoose";
 
 export interface IPlace extends Document {
-  id: string;
+  id: Types.ObjectId;
   displayName: {
     text: string;
     languageCode: string;
@@ -53,7 +53,7 @@ export interface IPlace extends Document {
 
 // 2. MongoDB Schema
 const PlaceSchema: Schema = new Schema({
-  id: { type: String, required: true, unique: true },
+  id: { type: Schema.Types.ObjectId, default: () => new Types.ObjectId() },  
   displayName: {
     text: { type: String, required: true },
     languageCode: { type: String, required: true },
